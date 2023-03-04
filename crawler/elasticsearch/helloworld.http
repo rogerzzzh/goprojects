@@ -1,0 +1,4 @@
+GET https://localhost:9200/
+Accept: application/json
+Authorization: Basic elastic jmM5KaDXWj09nntaRzLj
+

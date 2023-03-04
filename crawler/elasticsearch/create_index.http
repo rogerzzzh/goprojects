@@ -1,0 +1,6 @@
+PUT https://localhost:9200/test
+Content-Type: application/json
+Authorization: Basic elastic jmM5KaDXWj09nntaRzLj
+
+{
+}

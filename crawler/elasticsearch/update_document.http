@@ -1,0 +1,10 @@
+POST https://localhost:9200/test_index/_doc/2
+Content-Type: application/json
+Authorization: Basic elastic jmM5KaDXWj09nntaRzLj
+
+{
+  "name": "interview",
+  "instructor": "ccmouse",
+  "start_date": "2022-03-01"
+}
+
