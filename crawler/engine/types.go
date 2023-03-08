@@ -7,5 +7,11 @@ type Request struct {
 
 type ParseResult struct {
 	Requests []Request
-	Items    []interface{}
+	Items    []Item
+}
+
+type Item struct {
+	Url     string
+	Id      string
+	Payload interface{}
 }

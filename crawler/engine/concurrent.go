@@ -36,7 +36,7 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	}
 
 	for result := range out {
-		//log.Printf("Concurrent Engine Info: got items %s", result.Items)
+		log.Printf("Concurrent Engine Info: got items %s", result.Items)
 		for _, item := range result.Items {
 			//log.Printf("Concurrent Engine Info: got %s", item)
 			go func(item interface{}) {

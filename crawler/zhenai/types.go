@@ -1,5 +1,7 @@
 package zhenai
 
+import "encoding/json"
+
 type UserProfile struct {
 	Age        int
 	Gender     string
@@ -10,4 +12,15 @@ type UserProfile struct {
 	Education  string
 	Occupation string
 	Weight     int
+}
+
+func FromJsonObj(o interface{}) (UserProfile, error) {
+	var res UserProfile
+	s, err := json.Marshal(o)
+	if err != nil {
+		return res, err
+	}
+
+	err = json.Unmarshal(s, &res)
+	return res, err
 }
