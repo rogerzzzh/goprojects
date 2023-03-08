@@ -19,13 +19,16 @@ func ParseCity(body []byte) engine.ParseResult {
 	matches := r.FindAllSubmatch(body, -1)
 
 	parseRequests := []engine.Request{}
-	parseItems := []interface{}{}
+	parseItems := []engine.Item{}
 	for _, match := range matches {
+		url := string(match[1])
 		parseRequests = append(parseRequests, engine.Request{
-			Url:       string(match[1]),
-			ParseFunc: ParseProfile,
+			Url: url,
+			ParseFunc: func(bytes []byte) engine.ParseResult {
+				return ParseProfile(bytes, url)
+			},
 		})
-		parseItems = append(parseItems, string(match[2]))
+		parseItems = append(parseItems, engine.Item{Payload: fmt.Sprintf("Profile %s", match[2])})
 	}
 
 	r = regexp.MustCompile(cityPageURLRe)
@@ -36,7 +39,7 @@ func ParseCity(body []byte) engine.ParseResult {
 			Url:       string(match[1]),
 			ParseFunc: ParseCity,
 		})
-		parseItems = append(parseItems, fmt.Sprintf("City %s Page %s", match[1], match[2]))
+		parseItems = append(parseItems, engine.Item{Payload: fmt.Sprintf("City %s Page %s", match[1], match[2])})
 	}
 
 	return engine.ParseResult{Requests: parseRequests, Items: parseItems}

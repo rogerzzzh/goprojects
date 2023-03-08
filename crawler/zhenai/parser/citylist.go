@@ -16,11 +16,11 @@ func ParseCityList(body []byte) engine.ParseResult {
 	matches := r.FindAllSubmatch(body, -1)
 
 	parsedRequests := []engine.Request{}
-	parsedItems := []interface{}{}
+	parsedItems := []engine.Item{}
 	limit := 20
 	for _, match := range matches {
 		parsedRequests = append(parsedRequests, engine.Request{Url: string(match[1]), ParseFunc: ParseCity})
-		parsedItems = append(parsedItems, string(match[2]))
+		parsedItems = append(parsedItems, engine.Item{Payload: match[2]})
 
 		limit--
 		if limit <= 0 {

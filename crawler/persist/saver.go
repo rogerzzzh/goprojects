@@ -21,38 +21,36 @@ func getClient() (*elasticsearch.Client, error) {
 	return elasticsearch.NewClient(cfg)
 }
 
-func ItemSaver() chan engine.Item {
+func ItemSaver(index string) (chan engine.Item, error) {
 	out := make(chan engine.Item)
+	es, err := getClient()
+	if err != nil {
+		return nil, err
+	}
 	counter := 0
 	go func() {
 		for item := range out {
 			counter++
 			log.Printf("Saver Info: Got #%d item to save, %s", counter, item)
-			go save(item)
+			go save(es, index, item)
 		}
 	}()
-	return out
+	return out, nil
 }
 
-func save(item engine.Item) error {
-	_, err := getClient()
-	if err != nil {
-		panic(err)
-	}
-
-	es, err := getClient()
-	if err != nil {
-		panic(err)
-	}
-
+func save(es *elasticsearch.Client, index string, item engine.Item) error {
 	data, err := json.Marshal(item)
 	log.Printf("Saver Info: data = %s", data)
 	if err != nil {
 		panic(err)
 	}
 
+	if item.Id == "" {
+		return errors.New("Saver error: no id provided in item. Skipped.")
+	}
+
 	req := esapi.IndexRequest{
-		Index:      "test_index",
+		Index:      index,
 		DocumentID: item.Id,
 		Body:       bytes.NewReader(data),
 		Refresh:    "true",
@@ -62,7 +60,6 @@ func save(item engine.Item) error {
 		panic(err)
 	}
 	defer res.Body.Close()
-	//res, err := es.Index("data", bytes.NewReader(data)).Do(context.Background())
 
 	if res.IsError() {
 		log.Printf("Saver Info: save failed, got response %s", res)

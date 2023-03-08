@@ -34,7 +34,10 @@ const occupationRe = `<td><span class="label">职业： </span>([^<]+)</td>`
 // exmaple: <td><span class="label">体重：</span><span field="">33KG</span></td>
 const weightRe = `<td><span class="label">体重：</span><span field="">([0-9]+)KG</span></td>`
 
-func ParseProfile(body []byte) engine.ParseResult {
+// example: http://localhost:8080/mock/album.zhenai.com/u/2858527851503377365
+const idUrelRe = `http://localhost:8080/mock/album.zhenai.com/u/([0-9]+)`
+
+func ParseProfile(body []byte, url string) engine.ParseResult {
 	age, _ := strconv.Atoi(extractMatch(body, ageRe))
 	gender := extractMatch(body, genderRe)
 	name := extractMatch(body, nameRe)
@@ -57,7 +60,13 @@ func ParseProfile(body []byte) engine.ParseResult {
 		Weight:     weight,
 	}
 	result := engine.ParseResult{
-		Items: []interface{}{profile},
+		Items: []engine.Item{
+			{
+				Url:     url,
+				Id:      extractMatch([]byte(url), idUrelRe),
+				Payload: profile,
+			},
+		},
 	}
 	return result
 }

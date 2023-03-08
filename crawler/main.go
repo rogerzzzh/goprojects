@@ -18,7 +18,12 @@ const url = "http://localhost:8080/mock/www.zhenai.com/zhenghun/aba"
 func main() {
 	//e := engine.SimpleEngine{}
 	//e := engine.ConcurrentEngine{Scheduler: &scheduler.SimpleScheduler{}, WorkerCount: 10}
-	e := engine.ConcurrentEngine{Scheduler: &scheduler.QueuedScheduler{}, WorkerCount: 10, ItemSaver: persist.ItemSaver()}
+
+	itemSaveChan, err := persist.ItemSaver("test_index")
+	if err != nil {
+		panic(err)
+	}
+	e := engine.ConcurrentEngine{Scheduler: &scheduler.QueuedScheduler{}, WorkerCount: 10, ItemSaver: itemSaveChan}
 	//e.Run(engine.Request{
 	//	Url:       url,
 	//	ParseFunc: parser.ParseCityList,

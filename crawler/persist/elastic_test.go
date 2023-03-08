@@ -43,7 +43,8 @@ func TestElasticConnection(t *testing.T) {
 		},
 	}
 
-	err = save(profile)
+	const index = "test_index"
+	err = save(e8, index, profile)
 	if err != nil {
 		panic(err)
 	}
