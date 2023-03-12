@@ -13,5 +13,5 @@ type ParseResult struct {
 type Item struct {
 	Url     string
 	Id      string
-	Payload interface{}
+	Payload interface{} // stores the data needed and to be persisted with ItemSaver
 }

@@ -55,6 +55,7 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	}
 }
 
+// function to initialize worker
 func createWorker(ready ReadyNotifier, in chan Request, out chan ParseResult) {
 	go func() {
 		ready.WorkerReady(in)
