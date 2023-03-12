@@ -3,6 +3,7 @@ package main
 import (
 	"goprojects/crawler/engine"
 	"goprojects/crawler/zhenai"
+	"goprojects/distributed_crawler/config"
 	"goprojects/distributed_crawler/rpcsupport"
 	"testing"
 	"time"
@@ -41,7 +42,7 @@ func TestItemSave(t *testing.T) {
 	}
 
 	result := ""
-	err = client.Call("ItemSaverService.Save", profile, &result)
+	err = client.Call(config.ItemSaverRpc, profile, &result)
 	if err != nil || result != "ok" {
 		t.Errorf("result = %s, err = %s", result, err)
 	}

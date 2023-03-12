@@ -4,6 +4,7 @@ import (
 	"goprojects/crawler/engine"
 	"goprojects/crawler/scheduler"
 	"goprojects/crawler/zhenai/parser"
+	"goprojects/distributed_crawler/config"
 	"goprojects/distributed_crawler/persist/client"
 )
 
@@ -19,7 +20,7 @@ func main() {
 	//e := engine.SimpleEngine{}
 	//e := engine.ConcurrentEngine{Scheduler: &scheduler.SimpleScheduler{}, WorkerCount: 10}
 
-	itemSaveChan, err := client.ItemSaver(":1234")
+	itemSaveChan, err := client.ItemSaver(config.ItemSaverPort)
 	if err != nil {
 		panic(err)
 	}

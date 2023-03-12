@@ -2,14 +2,13 @@ package main
 
 import (
 	"goprojects/crawler/persist"
+	"goprojects/distributed_crawler/config"
 	persist2 "goprojects/distributed_crawler/persist"
 	"goprojects/distributed_crawler/rpcsupport"
 )
 
 func main() {
-	const host = ":1234"
-	const index = "test_data"
-	err := serveRpc(host, index)
+	err := serveRpc(config.ItemSaverPort, config.ElasticIndex)
 	if err != nil {
 		panic(err)
 	}
