@@ -11,7 +11,7 @@ import (
 	"log"
 )
 
-func getClient() (*elasticsearch.Client, error) {
+func GetClient() (*elasticsearch.Client, error) {
 	cfg := elasticsearch.Config{
 		Addresses:              []string{"https://localhost:9200"},
 		Username:               "elastic",
@@ -23,7 +23,7 @@ func getClient() (*elasticsearch.Client, error) {
 
 func ItemSaver(index string) (chan engine.Item, error) {
 	out := make(chan engine.Item)
-	es, err := getClient()
+	es, err := GetClient()
 	if err != nil {
 		return nil, err
 	}
@@ -31,14 +31,14 @@ func ItemSaver(index string) (chan engine.Item, error) {
 	go func() {
 		for item := range out {
 			counter++
-			log.Printf("Saver Info: Got #%d item to save, %s", counter, item)
-			go save(es, index, item)
+			log.Printf("Saver Info: Got #%d item to Save, %s", counter, item)
+			go Save(es, index, item)
 		}
 	}()
 	return out, nil
 }
 
-func save(es *elasticsearch.Client, index string, item engine.Item) error {
+func Save(es *elasticsearch.Client, index string, item engine.Item) error {
 	data, err := json.Marshal(item)
 	log.Printf("Saver Info: data = %s", data)
 	if err != nil {
@@ -62,14 +62,14 @@ func save(es *elasticsearch.Client, index string, item engine.Item) error {
 	defer res.Body.Close()
 
 	if res.IsError() {
-		log.Printf("Saver Info: save failed, got response %s", res)
+		log.Printf("Saver Info: Save failed, got response %s", res)
 		return errors.New("Save Item to ES failed")
 	} else {
 		var r map[string]interface{}
 		if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
 			log.Printf("Error parsing the response body: %s", err)
 		} else {
-			log.Printf("Saver Info: save successfully, [%s] %s; version=%s, id=%s", res.Status(), r["result"], r["_version"], r["_id"])
+			log.Printf("Saver Info: Save successfully, [%s] %s; version=%s, id=%s", res.Status(), r["result"], r["_version"], r["_id"])
 		}
 		return nil
 	}

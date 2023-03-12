@@ -9,7 +9,7 @@ import (
 )
 
 func TestElasticConnection(t *testing.T) {
-	e8, err := getClient()
+	e8, err := GetClient()
 	if err != nil {
 		t.Errorf("Not able to create ES client.")
 		panic(err)
@@ -25,15 +25,13 @@ func TestElasticConnection(t *testing.T) {
 		t.Errorf("Error saving the data, got response %s", res)
 	}
 
-	var profile engine.Item
-	name := "Mundo"
-	profile = engine.Item{
+	profile := engine.Item{
 		Id:  "abc",
 		Url: "http://www.baidu.com",
 		Payload: zhenai.UserProfile{
 			Age:        15,
 			Gender:     "Male",
-			Name:       name,
+			Name:       "Mundo",
 			Height:     220,
 			Income:     "3000",
 			Marriage:   "",
@@ -44,7 +42,7 @@ func TestElasticConnection(t *testing.T) {
 	}
 
 	const index = "test_index"
-	err = save(e8, index, profile)
+	err = Save(e8, index, profile)
 	if err != nil {
 		panic(err)
 	}
