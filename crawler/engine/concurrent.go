@@ -60,7 +60,7 @@ func createWorker(ready ReadyNotifier, in chan Request, out chan ParseResult) {
 	go func() {
 		ready.WorkerReady(in)
 		for request := range in {
-			result, err := worker(request)
+			result, err := Worker(request)
 			if err != nil {
 				log.Printf("Worker Error: worker error %v", err)
 				continue
